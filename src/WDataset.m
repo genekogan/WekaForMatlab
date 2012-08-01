@@ -132,9 +132,6 @@ classdef WDataset < handle
         function display(d)
             fprintf('Dataset located: %s\n', d.path);
             
-            d.attributes
-            d.attributeTypes
-            
         end
         function open(d)
             eval(sprintf('open %s', d.path));

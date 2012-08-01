@@ -101,9 +101,13 @@ elseif strfind(result,'=== Stratified cross-validation ===')
                confusion(i,j) = str2num(s{1+j});
            end
         end
-        results.confusion = confusion;        
-        results.precision = diag(confusion)' ./ sum(confusion);
-        results.recall = diag(confusion)' ./ sum(confusion,2)';
+%        confusion
+%        diag(confusion)
+%        sum(confusion)
+%        sum(confusion,2)
+%        results.confusion = confusion; 
+%        results.precision = diag(confusion)' ./ sum(confusion);
+%        results.recall = diag(confusion)' ./ sum(confusion,2)';
     end
     
     

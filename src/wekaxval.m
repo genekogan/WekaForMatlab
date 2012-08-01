@@ -1,5 +1,5 @@
-function results = wekaxval3(dataset1, dataset2, classifier, numfold)
-% results = wekaxval2(dataset1, dataset2, classifier, numfold)
+function results = wekaxval(dataset1, dataset2, classifier, numfold)
+% results = wekaxval(dataset1, dataset2, classifier, numfold)
 
 WEKAPATH = '/Users/Gene/Code/_Externals/weka-3-6-6/';
 

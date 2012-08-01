@@ -1,5 +1,5 @@
-function model = wekatrain2(dataset, classifier, modelname)
-% model = wekatrain2(dataset, classifier, modelname)
+function model = wekatrain(dataset, classifier, modelname)
+% model = wekatrain(dataset, classifier, modelname)
 
 WEKAPATH = '/Users/Gene/Code/_Externals/weka-3-6-6/';
 
@@ -28,7 +28,7 @@ for idxparam = 1:numparams, disp(sprintf('Generating model...'))
     % create model 
     cmd = [ 'java -Xmx2g -classpath ' WEKAPATH 'weka.jar ' ...
         classifier.classifier ' ' parameters ...
-        ' -t ' dataset.path ' -d ' model.path ' -o' ]; % -M        
+        ' -t ' dataset.path ' -d ' model.path ' -o -M' ];      
 
     tic;
     [ status, result ] = system(cmd);

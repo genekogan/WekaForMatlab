@@ -1,56 +1,38 @@
-function results = wekaclassify2(classifier, model, dataset)
-% results = wekaclassify2(classifier, model, dataset)
+function results = wekaclassify(classifier, model, dataset)
+% results = wekaclassify(classifier, model, dataset)
 
 WEKAPATH = '/Users/Gene/Code/_Externals/weka-3-6-6/';
 
 % apply model to classifier
 cmd = [ 'java -Xmx2g -classpath ' WEKAPATH 'weka.jar ' ...
-    classifier.classifier ' -l ' model.path ' -T ../genregrams/' dataset.path ...
+    classifier.classifier ' -l ' model.path ' -T ' dataset.path ...
     ' -o -p 0 -distribution' ];        
-
-tic;
+% -p 0 -distribution
 [ status, result ] = system(cmd);
-disp(cmd);
-disp(result);
-toc;
-
-results = result;
+disp(cmd)
+%disp(result)
 
 % parse results
-
-
-%{ 
-%distribution
-
-% parse results
-result = regexp(result, '[\f\n\r]', 'split');
-if strfind(result{5},'distribution')   % or predictions on test data (use []* for multi space)
-    prob = zeros(dataset.numinstances,length(dataset.classes));
-    for i=1:dataset.numinstances
-        pred = regexp(result{5+i},' ','split');
-        probdist = regexp(regexprep(pred{end-1},'*',''),',','split');
-        for j=1:length(probdist)
-            prob(i,j) = str2num(probdist{j});
-        end
-    end
-    results.prob = prob;
-end
-%}
-
-
-% regression
-
-t = strfind(result,'=== Predictions on test data ===')
+t = strfind(result,'=== Predictions on test data ===');
 if ~isempty(t)
-    result = regexp(result(t:end), '[\f\n\r]', 'split');
-    pred = zeros(dataset.numinstances,1);
-    actual = zeros(dataset.numinstances,1);
-    for i=1:dataset.numinstances
-        pred0 = regexp(result{3+i},'[ ]*','split');
-        pred0 = pred0(find(~strcmp(pred0,'')));
-        actual(i) = str2num(pred0{2});
-        pred(i) = str2num(pred0{3});
+    res = regexp(result(t:end), '[\f\n\r]', 'split');
+    numinstances = length(res)-5;
+    pred = zeros(numinstances,1);
+    actual = zeros(numinstances,1);
+    prob = [];
+    for i=1:numinstances
+        line = regexp(res{3+i},'[ ]*','split');
+        line = line(find(~strcmp(line,'')));
+        actual0 = regexp(line{2},':','split');
+        actual(i) = str2num(actual0{2});        
+        pred0 = regexp(line{3},':','split');
+        pred(i) = str2num(pred0{2});
+        prob0 = regexp(regexprep(line{end},'*',''),',','split');
+        for j=1:length(prob0)
+            prob(i,j) = str2double(prob0{j});
+        end
     end
     results.actual = actual;
     results.predicted = pred;
+    results.prob = prob;
 end
